@@ -1,0 +1,28 @@
+{
+  "name": "afritechnews",
+  "version": "1.0.0",
+  "description": "Web Scraped tech news about Africa",
+  "main": "server.js",
+  "scripts": {
+    "test": "start test",
+    "scrape": "nodemon scrape.js",
+    "scrape_single": "node TechAfricaScraper.js ",
+    "test_file_sys": "node test.js"
+  },
+  "keywords": [
+    "Tech",
+    "Africa",
+    "News",
+    "Scrapper",
+    "Data",
+    "Headlines"
+  ],
+  "author": "George Wiredu Ansong",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "firebase-admin": "^9.3.0",
+    "nodemon": "^2.0.6",
+    "puppeteer": "^5.4.1"
+  }
+}
