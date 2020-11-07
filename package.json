@@ -6,7 +6,7 @@
   "scripts": {
     "test": "start test",
     "scrape": "nodemon scrape.js",
-    "scrape_single": "node TechAfricaScraper.js ",
+    "web_scraper": "node server.js ",
     "test_file_sys": "node test.js"
   },
   "keywords": [

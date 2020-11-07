@@ -4,6 +4,7 @@ const fs = require("fs");
 //TechniAfrica.com
 const scrapeSiteData2 = async () => {
   try {
+    console.log("starting...");
     const url = "https://www.techinafrica.com/";
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
@@ -19,6 +20,7 @@ const scrapeSiteData2 = async () => {
     }, pageLinksSelector);
 
     let dataSet = [];
+    console.log("scraping blog links");
     //loopo through links
     for (let newsPage of pageLinks) {
       await page.goto(`${newsPage}`);
@@ -65,22 +67,17 @@ const scrapeSiteData2 = async () => {
     let currentDate = `${fullDate} / ${fullTime}`;
     let dataObject = { [currentDate]: { ...dataSet } };
 
-    //read Json file and append scraped data to it
-    fs.readFile("./_data/TechniAfric.json", (err, data) => {
-      let jsonData = JSON.parse(data);
-      jsonData.push(dataObject);
-      fs.writeFile(
-        "./_data/TechniAfric.json",
-        JSON.stringify(jsonData),
-        (err) => {
-          if (err) {
-            throw err;
-          } else {
-            console.log("file written");
-          }
+    //store data in json file
+    fs.writeFile(
+      "./_data/TechniAfric.json",
+      JSON.stringify(dataObject),
+      (err, data) => {
+        if (err) {
+          console.log(err);
         }
-      );
-    });
+        console.log("saved to file");
+      }
+    );
   } catch (error) {
     console.log(error);
   }

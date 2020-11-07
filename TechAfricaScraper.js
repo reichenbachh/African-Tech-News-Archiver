@@ -1,9 +1,10 @@
 const puppeteer = require("puppeteer");
 const fs = require("fs");
-const scrapeSiteData2 = require("./scrape");
+
 const scrapeSiteData = async () => {
   let dataSet = [];
   try {
+    console.log("starting...");
     let url = "https://www.techafricanews.com/";
     let pageNum = 2;
     for (let i = 0; i < 3; i++) {
@@ -19,6 +20,7 @@ const scrapeSiteData = async () => {
         return link;
       }, pageLinksSelector);
 
+      console.log("scraping blog links");
       for (newsPage of pageLinks) {
         await page.goto(`${newsPage}`);
         let articleTitle = await page.waitForSelector(".post-content > h1");
@@ -66,21 +68,16 @@ const scrapeSiteData = async () => {
   let dataObject = { [currentDate]: { ...dataSet } };
 
   //read Json file and append scraped data to it
-  fs.readFile("./_data/TechniAfric.json", (err, data) => {
-    let jsonData = JSON.parse(data);
-    jsonData.push(dataObject);
-    fs.writeFile(
-      "./_data/TechniAfric.json",
-      JSON.stringify(jsonData),
-      (err) => {
-        if (err) {
-          throw err;
-        } else {
-          console.log("file written");
-        }
+  fs.writeFile(
+    "./_data/TechAfrica.json",
+    JSON.stringify(dataObject),
+    (err, data) => {
+      if (err) {
+        console.log(err);
       }
-    );
-  });
+      console.log("file written");
+    }
+  );
 };
 
-module.exports = scrapeSiteData2;
+module.exports = scrapeSiteData;
