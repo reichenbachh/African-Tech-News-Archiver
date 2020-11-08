@@ -67,17 +67,7 @@ const scrapeSiteData2 = async () => {
     let currentDate = `${fullDate} / ${fullTime}`;
     let dataObject = { [currentDate]: { ...dataSet } };
 
-    //store data in json file
-    fs.writeFile(
-      "./_data/TechniAfric.json",
-      JSON.stringify(dataObject),
-      (err, data) => {
-        if (err) {
-          console.log(err);
-        }
-        console.log("saved to file");
-      }
-    );
+    return dataObject;
   } catch (error) {
     console.log(error);
   }
