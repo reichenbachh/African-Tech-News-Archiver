@@ -1,25 +1,27 @@
 const puppeteer = require("puppeteer");
-const fs = require("fs");
+const uuid = require("uuid");
 
 //TechniAfrica.com
 const scrapeSiteData2 = async () => {
   try {
+    let dataSet = [];
+    const url = "https://www.techinafrica.com";
     console.log("starting...");
-    const url = "https://www.techinafrica.com/";
+    console.log(`scraping ${url}`);
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
+    page.setDefaultNavigationTimeout(0);
     await page.goto(url);
-    await page.waitForSelector(".entry-body");
+    await page.waitForSelector("h3.g1-gamma.g1-gamma-1st.entry-title > a");
 
     const pageLinksSelector = "h3.g1-gamma.g1-gamma-1st.entry-title > a";
 
+    //return all link card on page
     const pageLinks = await page.evaluate((pageLinksSelector) => {
       let links = Array.from(document.querySelectorAll(pageLinksSelector));
       let link = links.map((link) => link.href);
       return link;
     }, pageLinksSelector);
-
-    let dataSet = [];
     console.log("scraping blog links");
     //loopo through links
     for (let newsPage of pageLinks) {
@@ -41,8 +43,8 @@ const scrapeSiteData2 = async () => {
         (articleBody) => articleBody.innerText,
         articleBody
       );
-
       let techniAfricaData = {
+        id: uuid.v4(),
         title: await articleTitleText,
         imageUrl: await articleImageLink,
         body: articleBodyText,
@@ -52,22 +54,8 @@ const scrapeSiteData2 = async () => {
     debugger;
     //close browser after scraping
     await browser.close();
-    console.log("scraping is done");
-
-    //get full date and time
-    let today = new Date();
-    let fullDate =
-      today.getFullYear() +
-      "-" +
-      (today.getMonth() + 1) +
-      "-" +
-      today.getDate();
-    let fullTime =
-      today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-    let currentDate = `${fullDate} / ${fullTime}`;
-    let dataObject = { [currentDate]: { ...dataSet } };
-
-    return dataObject;
+    console.log("scraping is done for techInAfricaNews");
+    return { ...dataSet };
   } catch (error) {
     console.log(error);
   }

@@ -7,7 +7,7 @@
     "test": "start test",
     "scrape": "nodemon scrape.js",
     "web_scraper": "node server.js ",
-    "test_file_sys": "node test.js"
+    "tests": "node TechAfricaScraper.js"
   },
   "keywords": [
     "Tech",
@@ -22,9 +22,11 @@
   "dependencies": {
     "express": "^4.17.1",
     "firebase-admin": "^9.3.0",
+    "lodash": "^4.17.20",
     "node-cron": "^2.0.3",
     "nodemon": "^2.0.6",
     "puppeteer": "^5.4.1",
-    "shelljs": "^0.8.4"
+    "shelljs": "^0.8.4",
+    "uuid": "^8.3.1"
   }
 }
