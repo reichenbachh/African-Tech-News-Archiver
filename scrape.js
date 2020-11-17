@@ -8,7 +8,10 @@ const scrapeSiteData2 = async () => {
     const url = "https://www.techinafrica.com";
     console.log("starting...");
     console.log(`scraping ${url}`);
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ["--no-sandbox"],
+    });
     const page = await browser.newPage();
     page.setDefaultNavigationTimeout(0);
     await page.goto(url);

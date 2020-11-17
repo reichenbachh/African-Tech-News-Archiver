@@ -10,7 +10,10 @@ const scrapeSiteData = async () => {
     console.log(`scraping ${url}`);
     let pageNum = 2;
     for (let i = 0; i < 3; i++) {
-      const browser = await puppeteer.launch();
+      const browser = await puppeteer.launch({
+        headless: true,
+        args: ["--no-sandbox"],
+      });
       const page = await browser.newPage();
       //await page.setDefaultNavigationTimeout(0);
       await page.goto(url);

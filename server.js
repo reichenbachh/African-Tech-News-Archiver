@@ -8,6 +8,8 @@ const date = require("./date");
 const lodash = require("lodash");
 
 const app = express();
+const ip = process.env.IP || "0.0.0.0";
+const port = process.env.PORT || 8080;
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
@@ -30,6 +32,6 @@ cron.schedule("*/10 * * * *", async () => {
   }
 });
 
-app.listen(5000, () => {
-  console.log("server running  at port 5000");
+app.listen(port, ip, () => {
+  console.log("server running");
 });
