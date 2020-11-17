@@ -5,9 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "start test",
-    "scrape": "nodemon scrape.js",
-    "web_scraper": "node server.js ",
-    "tests": "node TechAfricaScraper.js"
+    "start": "node server.js"
   },
   "keywords": [
     "Tech",
