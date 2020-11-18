@@ -18,7 +18,7 @@ admin.initializeApp({
 const db = admin.firestore();
 
 //"0 0 * * *"
-cron.schedule("0 0 * * *", async () => {
+cron.schedule("0 * * * *", async () => {
   try {
     const techAfricaData = await techAfricaScrape();
     const techInAfricaData = await techInAfricaScrape();
