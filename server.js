@@ -6,6 +6,7 @@ const serviceAccount = require("./afritechinfo-b1f58-firebase-adminsdk-41c3j-852
 const cron = require("node-cron");
 const date = require("./date");
 const lodash = require("lodash");
+const { merge } = require("lodash");
 
 const app = express();
 const ip = process.env.IP || "0.0.0.0";
@@ -17,16 +18,45 @@ admin.initializeApp({
 //create instance of firebase database
 const db = admin.firestore();
 
-//"0 0 * * *"
-cron.schedule("0 * * * *", async () => {
+//loop and persist all  page objects to firestore database
+const persistData = async (dataSequence, createdAt) => {
+  const dateData = {
+    createdAt,
+  };
+  try {
+    let docNum = 0;
+    for (const data of dataSequence) {
+      await db
+        .collection("scraped_tech_news")
+        .doc(`${docNum}`)
+        .set(data)
+        .then((data) => {
+          return "done";
+        });
+      docNum++;
+    }
+    await db
+      .collection("scraped_tech_news")
+      .doc(`createdAt`)
+      .set(dateData)
+      .then((data) => {
+        return console.log("completed");
+      });
+    console.log("data persisted");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//("0 0 * * *");
+cron.schedule("0 0 * * *", async () => {
   try {
     const techAfricaData = await techAfricaScrape();
     const techInAfricaData = await techInAfricaScrape();
     const dateToday = date();
-    let mergedData = lodash.merge(techAfricaData, techInAfricaData);
-    const data = { [dateToday]: mergedData };
-    await db.collection("scraped_tech_news").doc("today").set(data);
-    return console.log("data persisted");
+    let mergedData = { ...techInAfricaData, ...techAfricaData };
+    const dataArr = lodash.toArray(mergedData);
+    await persistData(dataArr, dateToday);
   } catch (error) {
     console.log(error);
   }
