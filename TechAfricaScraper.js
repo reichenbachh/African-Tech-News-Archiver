@@ -61,7 +61,7 @@ const scrapeSiteData = async () => {
       pageNum++;
     }
     console.log("scraping done for TechAfricaNews");
-    return { ...dataSet };
+    return dataSet;
   } catch (error) {
     console.log(error);
   }

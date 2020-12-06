@@ -15,6 +15,13 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
+app.get("/", (req, res) => {
+  res.status(200).json({
+    sucess: false,
+    message: "web scrpaper running",
+  });
+});
+
 //create instance of firebase database
 const db = admin.firestore();
 
@@ -31,12 +38,12 @@ const persistData = async (dataSequence, createdAt) => {
         .doc(`${docNum}`)
         .set(data)
         .then((data) => {
+          docNum++;
           return "done";
         });
-      docNum++;
     }
     await db
-      .collection("scraped_tech_news")
+      .collection("time_scraped")
       .doc(`createdAt`)
       .set(dateData)
       .then((data) => {
@@ -48,15 +55,24 @@ const persistData = async (dataSequence, createdAt) => {
   }
 };
 
+//remove duplicates
+const removeDuplicate = async (dataSequence) => {
+  dataSequence = dataSequence.filter(
+    (thing, index, self) =>
+      index === self.findIndex((t) => t.title === thing.title)
+  );
+  return dataSequence;
+};
+
 //("0 0 * * *");
-cron.schedule("0 0 * * *", async () => {
+cron.schedule("*/10 * * * *", async () => {
   try {
     const techAfricaData = await techAfricaScrape();
     const techInAfricaData = await techInAfricaScrape();
     const dateToday = date();
-    let mergedData = { ...techInAfricaData, ...techAfricaData };
-    const dataArr = lodash.toArray(mergedData);
-    await persistData(dataArr, dateToday);
+    let dataArray = [...techAfricaData, ...techInAfricaData];
+    dataArray = await removeDuplicate(dataArray);
+    await persistData(dataArray, dateToday);
   } catch (error) {
     console.log(error);
   }

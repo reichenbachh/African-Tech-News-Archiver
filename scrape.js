@@ -58,7 +58,7 @@ const scrapeSiteData2 = async () => {
     //close browser after scraping
     await browser.close();
     console.log("scraping is done for techInAfricaNews");
-    return { ...dataSet };
+    return dataSet;
   } catch (error) {
     console.log(error);
   }
